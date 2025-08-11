@@ -54,8 +54,8 @@ const futureValue = yearlySpend * ((Math.pow(1 + rate, years) - 1) / rate);
 document.getElementById("info").innerHTML = `<h2>${title}</h2><p>₹${amount} × ${freq} days/year</p>`;
 document.getElementById("message").innerHTML = 
     type === "spend"
-    ? `Agar aap ye paisa save/invest karte to ${years} saal me ₹${futureValue.toLocaleString('en-IN')} ban sakta tha!`
-    : `Wah! Aap already save kar rahe ho. ${years} saal me ₹${futureValue.toLocaleString('en-IN')} ho jayega!`;
+    ? `If you invest or save this money then in ${years} years ₹${futureValue.toLocaleString('en-IN')} It could become this much!`
+    : `Amazing! you are already saving this, in ${years} years ₹${futureValue.toLocaleString('en-IN')} it would be this much!!`;
 
 document.getElementById("emoji").innerHTML = type === "spend" ? "😮" : "😄";
 
