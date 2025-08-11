@@ -63,7 +63,7 @@ document.getElementById("emoji").innerHTML = type === "spend" ? "😮" : "😄";
 new Chart(document.getElementById('myChart'), {
     type: 'bar',
     data: {
-        labels: ['Abhi ka paisa', `${years} saal baad`],
+        labels: ['Current amount of money', `money after ${years} year/s later`],
         datasets: [{
             label: 'Rupees',
             data: [yearlySpend, futureValue],
