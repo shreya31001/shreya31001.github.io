@@ -1,70 +1,80 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Expense ➜ Wealth — Interactive Calculator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-:root{
---bg-1: #0f172a; /* deep navy */
---bg-2: #0b3a2b; /* teal-ish */
---card: rgba(255,255,255,0.06);
---glass: rgba(255,255,255,0.06);
---accent: #00d084;
---muted: rgba(255,255,255,0.72);
---glass-2: rgba(255,255,255,0.03);
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-margin:0;
-font-family:'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial;
-background: linear-gradient(180deg,var(--bg-1), #071927 60%);
-color:#e6eef3;
--webkit-font-smoothing:antialiased;
--moz-osx-font-smoothing:grayscale;
-padding:32px;
-display:flex;
-align-items:center;
-justify-content:center;
+
+
+emojiEl.textContent = type === 'spend' ? '🤯' : '😄';
+
+
+// update chart
+myChart.data.datasets[0].data = [yearly, future];
+myChart.options.scales.y.max = Math.max(future, yearly) * 1.15;
+myChart.update();
 }
 
 
-.wrap{
-width:100%;
-max-width:1100px;
-display:grid;
-grid-template-columns: 440px 1fr;
-gap:24px;
-align-items:start;
+// initial run
+updateAll();
+
+
+updateBtn.addEventListener('click', () => {
+updateAll();
+// push URL state for sharing
+const params = new URLSearchParams({
+title: titleInput.value,
+amount: amountInput.value,
+freq: freqInput.value,
+type: typeInput.value,
+rate: rateInput.value,
+years: yearsInput.value
+});
+history.replaceState({}, '', `${location.pathname}?${params.toString()}`);
+});
+
+
+// copy link
+shareBtn.addEventListener('click', async () => {
+const url = location.origin + location.pathname + '?' + new URLSearchParams({
+title: titleInput.value,
+amount: amountInput.value,
+freq: freqInput.value,
+type: typeInput.value,
+rate: rateInput.value,
+years: yearsInput.value
+}).toString();
+try{
+await navigator.clipboard.writeText(url);
+shareBtn.textContent = 'Link copied!';
+setTimeout(()=> shareBtn.textContent = 'Copy share link', 1500);
+}catch(e){
+prompt('Copy this link:', url);
 }
+});
 
 
-.card{
-background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-border-radius:14px;
-padding:20px;
-box-shadow: 0 6px 30px rgba(2,6,23,0.6);
-backdrop-filter: blur(6px) saturate(120%);
-border: 1px solid rgba(255,255,255,0.04);
-}
+// download chart as PNG
+downloadBtn.addEventListener('click', () => {
+const a = document.createElement('a');
+a.href = document.getElementById('myChart').toDataURL('image/png', 1);
+a.download = `${(titleInput.value||'expense').replace(/\s+/g,'_')}_chart.png`;
+a.click();
+});
 
 
-header h1{margin:0;font-size:22px;letter-spacing:-0.2px}
-header p{margin:6px 0 14px;color:var(--muted);font-size:13px}
+// allow pressing Enter in inputs to update quickly
+[titleInput, amountInput, rateInput, yearsInput].forEach(el => {
+el.addEventListener('keydown', (e) => { if(e.key === 'Enter') updateBtn.click(); });
+});
 
 
-.form-row{display:flex;gap:10px;margin-bottom:10px}
-label{font-size:12px;color:var(--muted);margin-bottom:6px;display:block}
-input[type="text"], input[type="number"], select{
-width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:14px;
-outline:none
-}
+// initialize with URL params without needing user to click
+window.addEventListener('load', () => {
+updateAll();
+});
 
 
-.small{font-size:12px;color:var(--muted)}
+// tiny accessibility focus outline
+document.addEventListener('keydown', (e) => {
+if(e.key === 'Tab') document.body.classList.add('show-focus');
+});
+</script>
+</body>
 </html>
