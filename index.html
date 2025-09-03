@@ -1,78 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Expense to Wealth Calculator</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Expense ➜ Wealth — Interactive Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background: #f8f9fa;
-        margin: 0;
-        padding: 20px;
-    }
-    h1 { color: #333; }
-    .result-box {
-        background: white;
-        padding: 20px;
-        margin-top: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    canvas { max-width: 100%; }
-    .emoji { font-size: 50px; margin: 10px; }
-</style>
-</head>
-<body>
-
-<h1>💰 Expense to Wealth</h1>
-<div id="info"></div>
-<div class="result-box">
-    <canvas id="myChart"></canvas>
-    <div id="message" style="margin-top:15px; font-weight: bold;"></div>
-    <div id="emoji" class="emoji"></div>
-</div>
-
-<script>
-function getParameter(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
+:root{
+--bg-1: #0f172a; /* deep navy */
+--bg-2: #0b3a2b; /* teal-ish */
+--card: rgba(255,255,255,0.06);
+--glass: rgba(255,255,255,0.06);
+--accent: #00d084;
+--muted: rgba(255,255,255,0.72);
+--glass-2: rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+margin:0;
+font-family:'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial;
+background: linear-gradient(180deg,var(--bg-1), #071927 60%);
+color:#e6eef3;
+-webkit-font-smoothing:antialiased;
+-moz-osx-font-smoothing:grayscale;
+padding:32px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-const title = decodeURIComponent(getParameter("title") || "Unknown Expense");
-const amount = parseFloat(getParameter("amount") || 0);
-const freq = parseInt(getParameter("freq") || 1); // days per year
-const type = getParameter("type") || "spend"; // spend/save
-const rate = 0.06; // 6% yearly
-const years = 25;
 
-const yearlySpend = amount * freq;
-const futureValue = yearlySpend * ((Math.pow(1 + rate, years) - 1) / rate);
+.wrap{
+width:100%;
+max-width:1100px;
+display:grid;
+grid-template-columns: 440px 1fr;
+gap:24px;
+align-items:start;
+}
 
-document.getElementById("info").innerHTML = `<h2>${title}</h2><p>₹${amount} × ${freq} days/year</p>`;
-document.getElementById("message").innerHTML = 
-    type === "spend"
-    ? `If you invest or save this money then in ${years} years ₹${futureValue.toLocaleString('en-IN')} It could become this much!`
-    : `Amazing! you are already saving this, in ${years} years ₹${futureValue.toLocaleString('en-IN')} it would be this much!!`;
 
-document.getElementById("emoji").innerHTML = type === "spend" ? "😮" : "😄";
+.card{
+background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+border-radius:14px;
+padding:20px;
+box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+backdrop-filter: blur(6px) saturate(120%);
+border: 1px solid rgba(255,255,255,0.04);
+}
 
-// Chart.js graph
-new Chart(document.getElementById('myChart'), {
-    type: 'bar',
-    data: {
-        labels: ['Current amount of money', `money after ${years} year/s later`],
-        datasets: [{
-            label: 'Rupees',
-            data: [yearlySpend, futureValue],
-            backgroundColor: type === "spend" ? ['#e74c3c', '#27ae60'] : ['#3498db', '#2ecc71']
-        }]
-    },
-    options: { responsive: true, scales: { y: { beginAtZero: true } } }
-});
-</script>
 
-</body>
+header h1{margin:0;font-size:22px;letter-spacing:-0.2px}
+header p{margin:6px 0 14px;color:var(--muted);font-size:13px}
+
+
+.form-row{display:flex;gap:10px;margin-bottom:10px}
+label{font-size:12px;color:var(--muted);margin-bottom:6px;display:block}
+input[type="text"], input[type="number"], select{
+width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:14px;
+outline:none
+}
+
+
+.small{font-size:12px;color:var(--muted)}
 </html>
